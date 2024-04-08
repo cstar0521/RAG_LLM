@@ -1,4 +1,4 @@
-from llama_index import PromptTemplate
+from llama_index.core import PromptTemplate
 
 
 instruction_str = """\
@@ -8,7 +8,7 @@ instruction_str = """\
     4. PRINT ONLY THE EXPRESSION.
     5. Do not quote the expression."""
 
-new_prompt = PromptTemplate(
+prompt_template = PromptTemplate(
     """\
     You are working with a pandas dataframe in Python.
     The name of the dataframe is `df`.
