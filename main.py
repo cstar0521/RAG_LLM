@@ -20,17 +20,19 @@ articles_query_engine.update_prompts({"pandas_prompt": prompt_template})
 
 articles_metadata = ToolMetadata(
             name="articles_data",
-            description="this gives information about facts from Medium articles",
+            description=(
+                "this gives information about facts from Medium articles."
+                "Use a detailed plain text question as input to the tool."
+                         ),
         )
 
 query_engine_tools = [
-    #note_engine,
     QueryEngineTool(
         query_engine=articles_query_engine,
         metadata=articles_metadata,
-    )
+    ),
 ]
-
+#chatting with llm
 llm = OpenAI(model="gpt-3.5-turbo-1106")
 agent = ReActAgent.from_tools(query_engine_tools, llm=llm, verbose=True, context=context)
 
