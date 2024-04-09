@@ -19,8 +19,9 @@ def reduce_df(df):
     This method ensures that the request sent to OpenAI API will not exceed it's limit.
     '''
     encoding = tiktoken.get_encoding(embedding_encoding)
-    df["n_tokens"] = df.combine.apply(lambda x: len(encoding.encode(x)))
-    print("\n\n\n",max(df["n_tokens"]),"\n\n\n")
+    df["n_tokens"] = [len(encoding.encode(x)) for x in df["Text"]]
+    #df["n_tokens"] = df.combine.apply(lambda x: len(encoding.encode(x))) 
+    #print("\n\n\n",max(df["n_tokens"]),"\n\n\n")
     df = df[df.n_tokens <= max_tokens]
     return df
 

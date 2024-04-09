@@ -14,7 +14,7 @@ from llama_index.core.agent import ReActAgent
 from llama_index.llms.openai import OpenAI
 from astrapy.db import AstraDB
 
-os.environ["OPENAI_API_KEY"] = getpass.getpass()
+#os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
 #loading env, data and creating pandas query engine that consumes information based on prompts.py
 dotenv_path=find_dotenv()
@@ -26,19 +26,32 @@ db = AstraDB(
   api_endpoint=os.getenv("ASTRA_ENDPOINT"))
 
 #loading data
-articles_path = os.path.join("data", "medium.csv")
-articles_df = pd.read_csv(articles_path)
+if os.path.isfile('data/embedded_data.csv'):
+    print("The file 'embedded_data.csv' already exists in this directory.")
+    response = input("Do you want to load data once again and apply embedding anyways? (Y/N) - default N ").strip().upper()
+
+    if response == 'Y':
+        articles_path = os.path.join("data", "medium.csv")
+        articles_df = pd.read_csv(articles_path)
+        articles_df = reduce_df(articles_df)
+        print("Getting embeddings ...")
+        articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
+        print("Saving csv ...")
+        articles_df.to_csv('embedded_data.csv', index=False)
+    else:
+        articles_path = os.path.join("data", "embedded_data.csv")
+        articles_df = pd.read_csv(articles_path)
 
 #myEmbedding = OpenAIEmbeddings
 #articles_df['ada_embedding'] = articles_df.ada_embedding.apply(eval).apply(np.array)
 #articles_df['embedded_values'] = articles_df.combined.apply(lambda x: get_embedding(x, model='text-embedding-3-small'))
 
 #articles_df['embedded_values'] = get_embeddings(articles_df['Text'].tolist())
-articles_df = reduce_df(articles_df)
-articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
-
-
-print(articles_df.head(5))
+#articles_df = reduce_df(articles_df)
+#print("Getting embeddings ...")
+#articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
+#print("Saving csv ...")
+#articles_df.to_csv('embedded_data.csv', index=False)
 
 #prompts
  
