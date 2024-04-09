@@ -27,6 +27,7 @@ articles_metadata = ToolMetadata(
         )
 
 query_engine_tools = [
+   #note_engine,
     QueryEngineTool(
         query_engine=articles_query_engine,
         metadata=articles_metadata,

@@ -23,6 +23,7 @@ prompt_template = PromptTemplate(
 )
 
 context = """Purpose: The primary role of this agent is to assist users by providing accurate 
-            information regardinga comprehensive collection of blog posts sourced from Medium, 
-            focusing specifically on articles published under the "Towards Data Science" publication.
+            information regardinga comprehensive collection of blog posts sourced from Medium.
+            The answer has to be short and focused on answering the answer only. 
+            The chat is focused specifically on articles published under the "Towards Data Science" publication.
             The information used will be based on the article text and it will be only the essence of most important information."""
