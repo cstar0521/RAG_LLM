@@ -1,6 +1,7 @@
 from prompts import instruction_str, prompt_template, context
+from typing import List
 import note_engine
-from embeddings import add_embeddings
+from embeddings import get_embedding, reduce_df
 import getpass
 import os
 import pandas as pd
@@ -29,17 +30,15 @@ articles_path = os.path.join("data", "medium.csv")
 articles_df = pd.read_csv(articles_path)
 
 #myEmbedding = OpenAIEmbeddings
-articles_df['ada_embedding'] = articles_df.ada_embedding.apply(eval).apply(np.array)
+#articles_df['ada_embedding'] = articles_df.ada_embedding.apply(eval).apply(np.array)
 #articles_df['embedded_values'] = articles_df.combined.apply(lambda x: get_embedding(x, model='text-embedding-3-small'))
 
-"""embedding_model = "text-embedding-ada-002"
-embedding_encoding = "cl100k_base"
-max_tokens = 8000
+#articles_df['embedded_values'] = get_embeddings(articles_df['Text'].tolist())
+articles_df = reduce_df(articles_df)
+articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
 
-encoding = tiktoken.get_encoding(embedding_encoding)
-articles_df["n_tokens"] = articles_df.combine.apply(lambda x: len(encoding.encode(x)))
-print("\n\n\n",max(articles_df["n_tokens"]),"\n\n\n")
-df = articles_df[articles_df.n_tokens <= max_tokens]"""
+
+print(articles_df.head(5))
 
 #prompts
  
