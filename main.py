@@ -26,21 +26,44 @@ def load_articles_df():
             except Exception as e:
                 print(f"An error occurred while loading 'medium.csv': {str(e)}")
                 articles_df = None
+    else:
+            try:
+                articles_df = pd.read_csv(original_articles_path)
+                articles_df = modify_articles_df(articles_df)
+            except Exception as e:
+                print(f"An error occurred while loading 'medium.csv': {str(e)}")
+                articles_df = None
+
     return articles_df
+
+#TODO: zastosowac dry zeby kod sie nie powielal powyzej, zmienic kolejnosc metod jesli konieczne
 
 def modify_articles_df(articles_df):
     '''
+    # Zmiana: Dodano blok try-except
     The goal of this method is to create vector embeddings from the provided dataframe.
-    The embeddings are created only for the rows that does not exceed OpenAI API limits.
+    The embeddings are created only for the rows that do not exceed OpenAI API limits.
     '''
-    articles_df = reduce_df(articles_df)
-    print("Getting embeddings ...")
-    articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
-    print("Saving csv ...")
+    try:
+        articles_df = reduce_df(articles_df)
+        if articles_df is None:
+            print("An error occurred while processing the DataFrame. Please upload the file again.")
+            return None
         
-    articles_df.to_csv(embedded_articles_path, index=False)
-   
+        print("Getting embeddings ...")
+        articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
+        if articles_df['embedded_values'].isnull().values.any():
+            print("An error occurred while creating embeddings. Please upload the file again.")
+            return None
+
+        print("Saving csv ...")
+        articles_df.to_csv(embedded_articles_path, index=False)
+    except Exception as e:
+        print(f"An error occurred while modifying the DataFrame: {str(e)}")
+        return None
+    
     return articles_df
+
 
 def query_agent(articles_df):
     '''
