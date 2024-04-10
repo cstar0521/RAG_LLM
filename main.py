@@ -29,6 +29,10 @@ def load_articles_df():
     return articles_df
 
 def modify_articles_df(articles_df):
+    '''
+    The goal of this method is to create vector embeddings from the provided dataframe.
+    The embeddings are created only for the rows that does not exceed OpenAI API limits.
+    '''
     articles_df = reduce_df(articles_df)
     print("Getting embeddings ...")
     articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
@@ -39,6 +43,9 @@ def modify_articles_df(articles_df):
     return articles_df
 
 def query_agent(articles_df):
+    '''
+    The goal of this method is to create an PandasQueryEngine agent that will allow the user to chat with LLM chatbot.
+    '''
     if articles_df is not None:
         try:
             articles_query_engine = pqe(df=articles_df, verbose=True, instruction_str=instruction_str)
