@@ -34,6 +34,9 @@ note_file = os.path.join("data", "notes.txt")
 
 
 def save_note(note):
+    '''
+    This method saves a note based on the last prompt to notes.txt file in data directory.
+    '''
     if not os.path.exists(note_file):
         open(note_file, "w")
 

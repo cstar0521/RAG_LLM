@@ -26,5 +26,8 @@ def reduce_df(df):
     return df
 
 def get_embedding(text, model="text-embedding-3-small"):
+   '''
+   This method create embedding for a single string, using OPENAI API.
+   '''
    text = text.replace("\n", " ")
    return client.embeddings.create(input = [text], model=model).data[0].embedding
