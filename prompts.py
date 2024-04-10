@@ -1,6 +1,5 @@
 from llama_index.core import PromptTemplate
 
-
 instruction_str = """\
     1. Convert the query to executable Python code using Pandas.
     2. The final line of code should be a Python expression that can be called with the `eval()` function.
