@@ -1,69 +1,14 @@
 from tools.prompts import instruction_str, prompt_template, context
-from tools.embeddings import get_embedding, reduce_df
 from dotenv import load_dotenv
-import pandas as pd
-import os
 from llama_index.core.query_engine import PandasQueryEngine as pqe
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.core.agent import ReActAgent
 from llama_index.llms.openai import OpenAI
+from data_operations import load_articles_df
+import os
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
-embedded_articles_path = os.path.join("data", "embedded_data.csv")
-original_articles_path = os.path.join("data", "medium.csv")
-
-def modify_articles_df(articles_df):
-    '''
-    The goal of this method is to create vector embeddings from the provided dataframe.
-    The embeddings are created only for the rows that do not exceed OpenAI API limits.
-    '''
-    try:
-        articles_df = reduce_df(articles_df)
-        if articles_df is None:
-            print("An error occurred while processing the DataFrame. Please upload the file again.")
-            return None
-        
-        print("Getting embeddings ...")
-        articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
-        if articles_df['embedded_values'].isnull().values.any():
-            print("An error occurred while creating embeddings. Please upload the file again.")
-            return None
-
-        print("Saving csv ...")
-        articles_df.to_csv(embedded_articles_path, index=False)
-    except Exception as e:
-        print(f"An error occurred while modifying the DataFrame: {str(e)}")
-        return None
-    
-    return articles_df
-
-
-def _load_and_prepare_csv():
-    '''
-    Goal of this method is to load csv and apply modify_articles_df method on that file. 
-    It is implemented in order to apply to DRY principle. (Don't Repeat Yourself)
-    '''
-    try:
-        articles_df = pd.read_csv(original_articles_path)
-        articles_df = modify_articles_df(articles_df)
-    except Exception as e:
-        print(f"An error occurred while loading 'medium.csv': {str(e)}")
-        articles_df = None
-
-
-def load_articles_df():
-    if os.path.isfile(embedded_articles_path):
-        print("The file 'embedded_data.csv' already exists in this directory.")
-        response = input("Do you want to load data once again and apply embedding anyway? (Y/N) - default N ").strip().upper()
-        if response != 'Y':
-            articles_df = pd.read_csv(embedded_articles_path)
-        else:
-            _load_and_prepare_csv()
-    else:
-            _load_and_prepare_csv()
-
-    return articles_df
 
 def query_agent(articles_df):
     '''
