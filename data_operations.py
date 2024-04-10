@@ -16,7 +16,7 @@ def _modify_articles_df(articles_df):
             print("An error occurred while processing the DataFrame. Please upload the file again.")
             return None
         
-        print("Getting embeddings ...")
+        print("Creating embeddings ...")
         articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
         if articles_df['embedded_values'].isnull().values.any():
             print("An error occurred while creating embeddings. Please upload the file again.")
