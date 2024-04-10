@@ -10,54 +10,64 @@ from llama_index.llms.openai import OpenAI
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
+embedded_articles_path = os.path.join("data", "embedded_data.csv")
+original_articles_path = os.path.join("data", "medium.csv")
 
 def load_articles_df():
-    articles_path = os.path.join("data", "embedded_data.csv")
-    if os.path.isfile(articles_path):
+    if os.path.isfile(embedded_articles_path):
         print("The file 'embedded_data.csv' already exists in this directory.")
-        response = input("Do you want to load data once again and apply embedding anyways? (Y/N) - default N ").strip().upper()
-
-        if response == 'Y':
-            articles_df = pd.read_csv(os.path.join("data", "medium.csv"))
-            articles_df = reduce_df(articles_df)
-            print("Getting embeddings ...")
-            articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
-            print("Saving csv ...")
-            articles_df.to_csv(articles_path, index=False)
+        response = input("Do you want to load data once again and apply embedding anyway? (Y/N) - default N ").strip().upper()
+        if response != 'Y':
+            articles_df = pd.read_csv(embedded_articles_path)
         else:
-            articles_df = pd.read_csv(articles_path)
-    else:
-        print("The file 'embedded_data.csv' does not exist in this directory.")
-        articles_df = None
+            try:
+                articles_df = pd.read_csv(original_articles_path)
+                articles_df = modify_articles_df(articles_df)
+            except Exception as e:
+                print(f"An error occurred while loading 'medium.csv': {str(e)}")
+                articles_df = None
+    return articles_df
+
+def modify_articles_df(articles_df):
+    articles_df = reduce_df(articles_df)
+    print("Getting embeddings ...")
+    articles_df['embedded_values'] = articles_df['Text'].apply(get_embedding)
+    print("Saving csv ...")
+        
+    articles_df.to_csv(embedded_articles_path, index=False)
+   
     return articles_df
 
 def query_agent(articles_df):
     if articles_df is not None:
-        articles_query_engine = pqe(df=articles_df, verbose=True, instruction_str=instruction_str)
-        articles_query_engine.update_prompts({"pandas_prompt": prompt_template})
+        try:
+            articles_query_engine = pqe(df=articles_df, verbose=True, instruction_str=instruction_str)
+            articles_query_engine.update_prompts({"pandas_prompt": prompt_template})
 
-        articles_metadata = ToolMetadata(
-            name="articles_data",
-            description=(
-                "this gives information about facts from Medium articles."
-                "Use a detailed plain text question as input to the tool."
-            ),
-        )
+            articles_metadata = ToolMetadata(
+                name="articles_data",
+                description=(
+                    "this gives information about facts from Medium articles."
+                    "Use a detailed plain text question as input to the tool."
+                ),
+            )
 
-        query_engine_tools = [
-            QueryEngineTool(
-                query_engine=articles_query_engine,
-                metadata=articles_metadata,
-            ),
-        ]
+            query_engine_tools = [
+                QueryEngineTool(
+                    query_engine=articles_query_engine,
+                    metadata=articles_metadata,
+                ),
+            ]
 
-        llm = OpenAI(model="gpt-3.5-turbo-1106")
+            llm = OpenAI(model="gpt-3.5-turbo-1106")
 
-        agent = ReActAgent.from_tools(query_engine_tools, llm=llm, verbose=True, context=context)
+            agent = ReActAgent.from_tools(query_engine_tools, llm=llm, verbose=True, context=context)
 
-        while (prompt := input("Enter a prompt (q to quit): ")) != "q":
-            result = agent.query(prompt)
-            print(result)
+            while (prompt := input("Enter a prompt (q to quit): ")) != "q":
+                result = agent.query(prompt)
+                print(result)
+        except Exception as e:
+            print(f"An error occurred while running the query agent: {str(e)}")
     else:
         print("No data to query.")
 
