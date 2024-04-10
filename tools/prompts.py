@@ -13,6 +13,8 @@ prompt_template = PromptTemplate(
     The name of the dataframe is `df`.
     This is the result of `print(df.head())`:
     {df_str}
+    The last column of the dataframe contains vector embeddings values for the Text column.
+    The embeddings are created using OpenAI API.
 
     Follow these instructions:
     {instruction_str}
