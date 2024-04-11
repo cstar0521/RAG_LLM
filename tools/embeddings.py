@@ -6,7 +6,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 client = OpenAI(max_retries=5)
 
-#embedding_model = "text-embedding-3-small"
 embedding_model = "text-embedding-3-large"
 embedding_encoding = "cl100k_base"
 max_tokens = 8000 
@@ -59,21 +58,6 @@ def reduce_df(df):
     except Exception as e:
         print(f"An error occurred while reducing DataFrame: {str(e)}")
         return None
-
-#def reduce_df(df):
-#    '''
-#    This method ensures that the request sent to OpenAI API will not exceed it's limit.
-#    '''
-#    try:
-#        encoding = tiktoken.get_encoding(embedding_encoding)
-#        df["n_tokens"] = [len(encoding.encode(x)) for x in df["Text"]]
-#        #df["n_tokens"] = df.combine.apply(lambda x: len(encoding.encode(x))) 
-#        #print("\n\n\n",max(df["n_tokens"]),"\n\n\n")
-#        df = df[df.n_tokens <= max_tokens]
-#        return df
-#    except Exception as e:
-#        print(f"An error occurred while reducing DataFrame: {str(e)}")
-#        return None
 
 def get_embedding(text, model="text-embedding-3-large"):
    #TODO: change the model
