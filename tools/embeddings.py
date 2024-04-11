@@ -75,7 +75,7 @@ def reduce_df(df):
 #        print(f"An error occurred while reducing DataFrame: {str(e)}")
 #        return None
 
-def get_embedding(text, model="text-embedding-3-small"):
+def get_embedding(text, model="text-embedding-3-large"):
    #TODO: change the model
    '''
    This method create embedding for a single string, using OPENAI API.
