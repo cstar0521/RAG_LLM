@@ -39,9 +39,11 @@ def _load_and_prepare_csv():
     try:
         articles_df = pd.read_csv(original_articles_path)
         articles_df = _modify_articles_df(articles_df)
+        return(articles_df)
     except Exception as e:
         print(f"An error occurred while loading 'medium.csv': {str(e)}")
         articles_df = None
+        return(articles_df)
 
 
 def load_articles_df():
