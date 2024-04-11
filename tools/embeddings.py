@@ -53,6 +53,7 @@ def reduce_df(df):
                 new_rows.append(row)
         
         new_df = pd.DataFrame(new_rows)
+        new_df.drop(columns=["n_tokens"], inplace=True)
         
         return new_df
     except Exception as e:
