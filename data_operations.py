@@ -53,8 +53,8 @@ def load_articles_df():
         if response != 'Y':
             articles_df = pd.read_csv(embedded_articles_path)
         else:
-            _load_and_prepare_csv()
+            articles_df = _load_and_prepare_csv()
     else:
-            _load_and_prepare_csv()
+            articles_df = _load_and_prepare_csv()
 
     return articles_df

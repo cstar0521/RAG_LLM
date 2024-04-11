@@ -34,7 +34,7 @@ def query_agent(articles_df):
                 ),
             ]
 
-            llm = OpenAI(model="gpt-3.5-turbo-1106")
+            llm = OpenAI(model="gpt-3.5-turbo-1106", temperature=0.1)
 
             agent = ReActAgent.from_tools(query_engine_tools, llm=llm, verbose=True, context=context)
 
