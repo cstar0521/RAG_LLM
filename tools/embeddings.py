@@ -2,12 +2,12 @@ import pandas as pd
 import tiktoken
 from openai import OpenAI
 from typing import List
-from openai import OpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 client = OpenAI(max_retries=5)
 
-embedding_model = "text-embedding-3-small"
+#embedding_model = "text-embedding-3-small"
+embedding_model = "text-embedding-3-large"
 embedding_encoding = "cl100k_base"
 max_tokens = 8000 
 
@@ -54,7 +54,7 @@ def reduce_df(df):
         
         new_df = pd.DataFrame(new_rows)
         new_df.drop(columns=["n_tokens"], inplace=True)
-        
+
         return new_df
     except Exception as e:
         print(f"An error occurred while reducing DataFrame: {str(e)}")
