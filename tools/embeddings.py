@@ -20,7 +20,7 @@ def split_text(text):
     Split the text into chunks based on token limit.
     '''
     text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=32000, #32000 characters is around 8000 tokens
+    chunk_size=8050, 
     chunk_overlap=100,
     length_function=len,
     is_separator_regex=False,
@@ -53,6 +53,7 @@ def reduce_df(df):
                 new_rows.append(row)
         
         new_df = pd.DataFrame(new_rows)
+        
         return new_df
     except Exception as e:
         print(f"An error occurred while reducing DataFrame: {str(e)}")
@@ -74,12 +75,14 @@ def reduce_df(df):
 #        return None
 
 def get_embedding(text, model="text-embedding-3-small"):
+   #TODO: change the model
    '''
    This method create embedding for a single string, using OPENAI API.
    '''
    try:
        text = text.replace("\n", " ")
-       return client.embeddings.create(input=[text], model=model).data[0].embedding
+       emb = client.embeddings.create(input=[text], model=model).data[0].embedding
+       return emb
    except Exception as e:
        print(f"An error occurred while creating embedding: {str(e)}")
        return None
