@@ -25,7 +25,7 @@ To run the project, you need to have Python and pip installed. The project also 
     ```
     pip install -r requirements.txt
     ```
-
+ 
 ## Configuration
 The project uses the `.env` file for environment variable configuration. Before running the project, create the `.env` file and add OpenAI API key.
 
