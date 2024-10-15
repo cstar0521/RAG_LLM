@@ -1,5 +1,8 @@
 # RAG LLM Project
 
+## FYI
+I am currently working on way more complex RAG related app, within a few months this repo will be published and the main project on my profile will be replaced. 
+
 ## Description
 The RAG LLM Project is an artificial intelligence system that utilizes RAG (Retrieval-Augmented Generation) and LLM (Large Language Model) to provide answers to questions regarding data from Medium articles. This system enables quick search and content generation based on the given queries.
 
