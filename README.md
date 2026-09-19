@@ -9,6 +9,14 @@ The RAG LLM Project is an artificial intelligence system that utilizes RAG (Retr
 ## Requirements
 To run the project, you need to have Python and pip installed. The project also relies on the requirements.txt file, which contains all the necessary dependencies.
 
+## Tech Stack
+Python
+RAG
+OpenAI
+Vector Databases
+Embedding
+Chunking
+
 ## Installation
 1. Clone the repository to your local machine.
 2. Create a virtual Python environment:
