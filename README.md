@@ -46,3 +46,5 @@ python main.py
  ```
 
 After running the main.py code, a new csv file with embedded values will be created. If this file already exists the user will be asked if he/she want's to create a new file or to open the existing one.
+
+Thank you
